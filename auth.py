@@ -20,33 +20,41 @@ class AuthError(Exception):
 ## Auth Header
 
 def get_token_auth_header():
+    if "Authorization" not in request.headers:
+        abort(401)
+
     auth = request.headers.get('Authorization', None)
+
     if not auth:
+        # raise an AuthError if no header is present
         raise AuthError({
             'code': 'authorization_header_missing',
-            'description': 'Authorization header is expected.'
-        }, 401)
+            'description': 'Authorizaion header is excepted'
+               }, 401)
 
-    parts = auth.split()
-    if parts[0].lower() != 'bearer':
+    # raise an AuthError if the header is malformed
+    spliting = auth.split(' ')
+    if spliting[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Authorization header must start with "Bearer".'
-        }, 401)
+            'description': 'Token not Found'
+                    }, 401)
 
-    elif len(parts) == 1:
+    elif len(spliting) != 2:
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Token not found.'
-        }, 401)
+            'description': 'Token not Found'
+                    }, 401)
 
-    elif len(parts) > 2:
+    elif len(spliting) > 2:
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Authorization header must be bearer token.'
-        }, 401)
+            'description': 'Authorization must be bearer Token'
+                     }, 401)
 
-    token = parts[1]
+    # return the token part of the header
+    token = spliting[1]
+    print()
     return token
 
 def check_permissions(permission, payload):

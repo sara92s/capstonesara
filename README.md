@@ -37,7 +37,7 @@ source setup.sh
 Once you have your virtual environment setup and running, install dependencies by naviging to the `/starter/` directory and running:
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ##### Key Dependencies

@@ -1,5 +1,10 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import (
+  Flask,
+  request,
+  abort,
+  jsonify
+)
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
@@ -26,6 +31,10 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-origins', '*')
         return response
 
+    @app.route('/', methods=['GET'])
+    def start():
+        return "<h1> This is the main page </h1>"
+
     @app.route("/movies")
     @requires_auth('get:movies')
     def retrieve_movies(jwt):
@@ -44,7 +53,7 @@ def create_app(test_config=None):
 
     @app.route("/movies/<int:movie_id>")
     @requires_auth('get:movies')
-    def retrieve_movies(jwt, movie_id):
+    def retrieve_movie(jwt, movie_id):
         current_movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
         if current_movie is None:
             abort(404)
@@ -146,7 +155,7 @@ def create_app(test_config=None):
 
     @app.route("/actors/<int:actor_id>")
     @requires_auth('get:actors')
-    def retrieve_actors(jwt, actor_id):
+    def retrieve_actor(jwt, actor_id):
         current_actor = Actors.query.filter(Actors.id == actor_id).one_or_none()
         if current_actor is None:
             abort(404)
